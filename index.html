@@ -3,220 +3,56 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TPS 3R Sapu Bersih (SABEDAR) - Desa Dawuan Barat</title>
-    <!-- Tailwind CSS CDN -->
+    <title>TPS 3R Sapu Bersih - Desa Dawuan Barat</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FontAwesome Icon -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        brand: {
-                            50: '#f0fdf4',
-                            100: '#dcfce7',
-                            600: '#16a34a',
-                            700: '#15803d',
-                            800: '#166534',
-                            900: '#14532d',
-                        },
-                        gold: {
-                            500: '#d97706',
-                            600: '#b45309',
-                        }
-                    },
-                    fontFamily: {
-                        sans: ['Plus Jakarta Sans', 'sans-serif'],
-                    }
-                }
-            }
-        }
-    </script>
-    <style>
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-        }
-    </style>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans antialiased">
-
-    <!-- Header / Navbar -->
-    <header class="sticky top-0 z-50 bg-white/90 backdrop-blur-md border-b border-slate-200 shadow-sm">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <div class="w-12 h-12 rounded-full bg-brand-700 flex items-center justify-center text-white font-bold text-xl shadow-md border-2 border-amber-400">
-                    <i class="fa-solid font-bold text-amber-300">3R</i>
-                </div>
+<body class="bg-gray-100 text-gray-800 font-sans">
+    <header class="bg-emerald-700 text-white shadow-lg sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+            <div class="flex items-center space-x-3">
+                <i class="fas fa-recycle text-3xl text-emerald-300"></i>
                 <div>
-                    <h1 class="font-extrabold text-lg sm:text-xl text-slate-900 leading-tight">TPS 3R SAPU BERSIH</h1>
-                    <p class="text-xs text-brand-700 font-semibold tracking-wide">DESA DAWUAN BARAT (SABEDAR)</p>
+                    <h1 class="text-xl font-bold leading-tight">TPS 3R SAPU BERSIH</h1>
+                    <p class="text-xs text-emerald-200">Desa Dawuan Barat, Karawang</p>
                 </div>
             </div>
-            <nav class="hidden md:flex items-center gap-6 text-sm font-semibold text-slate-600">
-                <a href="#profil" class="hover:text-brand-600 transition">Profil & SK</a>
-                <a href="#pilah" class="hover:text-brand-600 transition">Panduan Pilah</a>
-                <a href="#layout" class="hover:text-brand-600 transition">Layout & Hanggar</a>
-                <a href="#kegiatan" class="hover:text-brand-600 transition">Dokumentasi</a>
-                <a href="#kas" class="hover:text-brand-600 transition">Kas Iuran Warga</a>
-                <a href="#kalkulator" class="hover:text-brand-600 transition">Kalkulator</a>
-            </nav>
-            <a href="#layanan" class="bg-brand-600 hover:bg-brand-700 text-white text-xs sm:text-sm font-bold px-4 py-2.5 rounded-xl shadow-md transition flex items-center gap-2">
-                <i class="fa-solid fa-truck-ramp-box"></i> Layanan Warga
-            </a>
         </div>
     </header>
 
-    <!-- Hero Section -->
-    <section class="relative bg-gradient-to-br from-brand-900 via-brand-800 to-slate-900 text-white py-16 sm:py-24 overflow-hidden">
-        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(#fff_1px,transparent_1px)] [background-size:16px_16px]"></div>
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div class="grid lg:grid-cols-2 gap-12 items-center">
-                <div>
-                    <div class="inline-flex items-center gap-2 bg-emerald-500/20 border border-emerald-400/30 px-3 py-1.5 rounded-full text-emerald-300 text-xs font-semibold mb-6">
-                        <i class="fa-solid fa-shield-halved"></i> Resmi Berpayung Hukum (SK Bupati & DLH Karawang)
-                    </div>
-                    <h2 class="text-3xl sm:text-5xl font-black leading-tight tracking-tight mb-6">
-                        Pilah Sampah Sejak Awal Untuk Bumi yang Lebih Bersih
-                    </h2>
-                    <p class="text-slate-300 text-base sm:text-lg mb-8 leading-relaxed">
-                        Sistem pengelolaan sampah terpadu berbasis masyarakat di Dusun Tegal Wangi, Desa Dawuan Barat, Kecamatan Cikampek, Kabupaten Karawang[span_13](start_span)[span_13](end_span).
-                    </p>
-                    <div class="flex flex-wrap gap-4">
-                        <a href="#pilah" class="bg-amber-500 hover:bg-amber-600 text-slate-950 font-bold px-6 py-3.5 rounded-xl shadow-lg transition flex items-center gap-2">
-                            <i class="fa-solid fa-recycle"></i> Cara Memilah Sampah
-                        </a>
-                        <a href="#kas" class="bg-white/10 hover:bg-white/20 text-white font-semibold px-6 py-3.5 rounded-xl border border-white/20 transition flex items-center gap-2">
-                            <i class="fa-solid fa-receipt"></i> Cek Kas Iuran Warga
-                        </a>
-                    </div>
-                </div>
-                <div class="grid grid-cols-2 gap-4">
-                    <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 text-center">
-                        <div class="text-3xl font-black text-amber-400 mb-1">500 m²</div>
-                        <p class="text-xs text-slate-300">Luas Total Hanggar TPS 3R[span_14](start_span)[span_14](end_span)</p>
-                    </div>
-                    <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 text-center">
-                        <div class="text-3xl font-black text-emerald-400 mb-1">100%</div>
-                        <p class="text-xs text-slate-300">Komitmen Pengolahan 3R[span_15](start_span)[span_15](end_span)</p>
-                    </div>
-                    <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 text-center">
-                        <div class="text-3xl font-black text-cyan-400 mb-1">RT 04/07</div>
-                        <p class="text-xs text-slate-300">Cakupan Wilayah Pelayanan[span_16](start_span)[span_16](end_span)[span_17](start_span)[span_17](end_span)</p>
-                    </div>
-                    <div class="bg-white/10 backdrop-blur-md p-6 rounded-2xl border border-white/10 text-center">
-                        <div class="text-3xl font-black text-amber-300 mb-1">K3 Terjamin</div>
-                        <p class="text-xs text-slate-300">APD & Keselamatan Operasional[span_18](start_span)[span_18](end_span)[span_19](start_span)[span_19](end_span)</p>
-                    </div>
-                </div>
+    <main class="container mx-auto px-4 py-8 max-w-4xl">
+        <div class="bg-white rounded-2xl shadow-md p-6 mb-6 border-l-8 border-emerald-600">
+            <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Sistem Layanan Sampah Digital</span>
+            <h2 class="text-2xl font-bold mt-2 text-gray-900">Selamat Datang di Portal Resmi TPS 3R "Sapu Bersih"</h2>
+            <p class="text-gray-600 text-sm mt-2 leading-relaxed">
+                Fasilitas Pengolahan Sampah 3R (Reduce, Reuse, Recycle) untuk mewujudkan lingkungan Desa Dawuan Barat yang bersih, hijau, dan berkelanjutan.
+            </p>
+            <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 gap-4 text-xs text-gray-500">
+                <div><strong>SK DLH:</strong> No. 600.4.15/1910/BERSIH/2026</div>
+                <div><strong>SK Kades:</strong> No. 148.1/SK.14/Ds/2026</div>
             </div>
         </div>
-    </section>
 
-    <!-- Profil & SK Legalitas -->
-    <section id="profil" class="py-16 bg-white border-b border-slate-200">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-brand-600 font-extrabold text-xs uppercase tracking-widest">Legalitas & Kepengurusan</span>
-                <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Landasan Hukum & Struktur TPS 3R</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
+                <i class="fas fa-dumpster text-emerald-600 text-2xl mb-2"></i>
+                <h3 class="font-bold text-lg text-emerald-900">Panduan Pemilahan Sampah</h3>
+                <p class="text-xs text-emerald-700 mt-1">Pisahkan sampah Organik (Sisa Makanan), Anorganik (Plastik/Kardus), dan B3 dari rumah tangga Anda.</p>
             </div>
-
-            <div class="grid md:grid-cols-2 gap-8 mb-12">
-                <!-- SK DLH -->
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0 text-xl font-bold">
-                            <i class="fa-solid fa-file-contract"></i>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-2.5 py-1 rounded-md border border-emerald-200">SK Kepala DLH Karawang</span>
-                            <h4 class="font-bold text-slate-900 mt-2 text-base">Nomor: 600.4.15/1910/BERSIH/2026[span_20](start_span)[span_20](end_span)[span_21](start_span)[span_21](end_span)</h4>
-                            <p class="text-xs text-slate-600 mt-2 leading-relaxed">
-                                Penatapan TPS 3R Sapu Bersih Desa Dawuan Barat Kecamatan Cikampek oleh Kepala Dinas Lingkungan Hidup Kabupaten Karawang (Asep Suryana, S.STP., M.H.)[span_22](start_span)[span_22](end_span)[span_23](start_span)[span_23](end_span)[span_24](start_span)[span_24](end_span).
-                            </p>
-                            <p class="text-xs text-slate-500 mt-2 font-medium"><i class="fa-solid fa-location-dot"></i> Dusun Tegal Wangi RT 05 RW 07, Desa Dawuan Barat[span_25](start_span)[span_25](end_span)</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- SK Kepala Desa -->
-                <div class="p-6 bg-slate-50 rounded-2xl border border-slate-200 shadow-sm hover:shadow-md transition">
-                    <div class="flex items-start gap-4">
-                        <div class="w-12 h-12 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center shrink-0 text-xl font-bold">
-                            <i class="fa-solid fa-stamp"></i>
-                        </div>
-                        <div>
-                            <span class="text-xs font-bold text-amber-700 bg-amber-50 px-2.5 py-1 rounded-md border border-amber-200">SK Kepala Desa Dawuan Barat</span>
-                            <h4 class="font-bold text-slate-900 mt-2 text-base">Nomor: 148.1/SK.14/Ds/2026[span_26](start_span)[span_26](end_span)[span_27](start_span)[span_27](end_span)</h4>
-                            <p class="text-xs text-slate-600 mt-2 leading-relaxed">
-                                Pengangkatan Kepengurusan TPS 3R Sapu Bersih Desa Dawuan Barat oleh PJ/Kepala Desa Dawuan Barat (Ari Maulana, S.KM., M.M.)[span_28](start_span)[span_28](end_span)[span_29](start_span)[span_29](end_span)[span_30](start_span)[span_30](end_span).
-                            </p>
-                            <p class="text-xs text-slate-500 mt-2 font-medium"><i class="fa-solid fa-calendar-check"></i> Ditetapkan pada tanggal 20 Juli 2026[span_31](start_span)[span_31](end_span)[span_32](start_span)[span_32](end_span)[span_33](start_span)[span_33](end_span)</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Table Pengurus -->
-            <div class="bg-white rounded-2xl border border-slate-200 overflow-hidden shadow-sm">
-                <div class="bg-slate-900 text-white p-4 px-6 flex items-center justify-between">
-                    <h4 class="font-bold text-sm"><i class="fa-solid fa-users-gear mr-2 text-amber-400"></i> Susunan Pengurus TPS 3R Sapu Bersih[span_34](start_span)[span_34](end_span)[span_35](start_span)[span_35](end_span)</h4>
-                    <span class="text-xs text-slate-400">Periode 2026[span_36](start_span)[span_36](end_span)[span_37](start_span)[span_37](end_span)</span>
-                </div>
-                <div class="overflow-x-auto">
-                    <table class="w-full text-left text-xs sm:text-sm">
-                        <thead class="bg-slate-100 border-b border-slate-200 text-slate-700 font-bold uppercase">
-                            <tr>
-                                <th class="p-3.5 px-6">No[span_38](start_span)[span_38](end_span)[span_39](start_span)[span_39](end_span)</th>
-                                <th class="p-3.5 px-6">Jabatan Organisasi[span_40](start_span)[span_40](end_span)[span_41](start_span)[span_41](end_span)</th>
-                                <th class="p-3.5 px-6">Nama / Unsur Instansi[span_42](start_span)[span_42](end_span)[span_43](start_span)[span_43](end_span)</th>
-                            </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-200 text-slate-700">
-                            <tr class="hover:bg-slate-50"><td class="p-3 px-6 font-semibold">1[span_44](start_span)[span_44](end_span)[span_45](start_span)[span_45](end_span)</td><td class="p-3 px-6 font-semibold text-brand-700">Pembina Umum[span_46](start_span)[span_46](end_span)[span_47](start_span)[span_47](end_span)</td><td class="p-3 px-6">Kepala Dinas LH Karawang / Kepala Desa Dawuan Barat[span_48](start_span)[span_48](end_span)[span_49](start_span)[span_49](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50"><td class="p-3 px-6 font-semibold">2[span_50](start_span)[span_50](end_span)[span_51](start_span)[span_51](end_span)</td><td class="p-3 px-6 font-semibold text-brand-700">Pembina Teknis[span_52](start_span)[span_52](end_span)[span_53](start_span)[span_53](end_span)</td><td class="p-3 px-6">Ketua Rescue Karang Taruna Kab. Karawang[span_54](start_span)[span_54](end_span)[span_55](start_span)[span_55](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50"><td class="p-3 px-6 font-semibold">3[span_56](start_span)[span_56](end_span)[span_57](start_span)[span_57](end_span)</td><td class="p-3 px-6 font-semibold text-brand-700">Penasehat[span_58](start_span)[span_58](end_span)[span_59](start_span)[span_59](end_span)</td><td class="p-3 px-6">Kepala Dusun se-Desa Dawuan Barat[span_60](start_span)[span_60](end_span)[span_61](start_span)[span_61](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50 bg-amber-50/50"><td class="p-3 px-6 font-bold">4[span_62](start_span)[span_62](end_span)[span_63](start_span)[span_63](end_span)</td><td class="p-3 px-6 font-bold text-amber-900">Ketua[span_64](start_span)[span_64](end_span)[span_65](start_span)[span_65](end_span)</td><td class="p-3 px-6 font-bold text-amber-900">Muhamad Amsida[span_66](start_span)[span_66](end_span)[span_67](start_span)[span_67](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50 bg-emerald-50/50"><td class="p-3 px-6 font-bold">5[span_68](start_span)[span_68](end_span)[span_69](start_span)[span_69](end_span)</td><td class="p-3 px-6 font-bold text-emerald-900">Sekretaris / Manager Tata Usaha[span_70](start_span)[span_70](end_span)[span_71](start_span)[span_71](end_span)</td><td class="p-3 px-6 font-bold text-emerald-900">Ricki Firmansyah[span_72](start_span)[span_72](end_span)[span_73](start_span)[span_73](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50"><td class="p-3 px-6 font-semibold">6[span_74](start_span)[span_74](end_span)[span_75](start_span)[span_75](end_span)</td><td class="p-3 px-6 font-semibold">Bendahara / Manager Keuangan[span_76](start_span)[span_76](end_span)[span_77](start_span)[span_77](end_span)</td><td class="p-3 px-6">Mulyati[span_78](start_span)[span_78](end_span)[span_79](start_span)[span_79](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50"><td class="p-3 px-6">7[span_80](start_span)[span_80](end_span)[span_81](start_span)[span_81](end_span)</td><td class="p-3 px-6">Tim Kreatif / Pemasaran[span_82](start_span)[span_82](end_span)[span_83](start_span)[span_83](end_span)</td><td class="p-3 px-6">Irfhan Arfhandy[span_84](start_span)[span_84](end_span)[span_85](start_span)[span_85](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50"><td class="p-3 px-6">8[span_86](start_span)[span_86](end_span)[span_87](start_span)[span_87](end_span)</td><td class="p-3 px-6">Tim Pemilah[span_88](start_span)[span_88](end_span)[span_89](start_span)[span_89](end_span)</td><td class="p-3 px-6">Nurjani Ato[span_90](start_span)[span_90](end_span)[span_91](start_span)[span_91](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50"><td class="p-3 px-6">9[span_92](start_span)[span_92](end_span)[span_93](start_span)[span_93](end_span)</td><td class="p-3 px-6">Tim Penimbang / Pengumpulan[span_94](start_span)[span_94](end_span)[span_95](start_span)[span_95](end_span)</td><td class="p-3 px-6">Ahmad & Dede Wiranta[span_96](start_span)[span_96](end_span)[span_97](start_span)[span_97](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50"><td class="p-3 px-6">10[span_98](start_span)[span_98](end_span)[span_99](start_span)[span_99](end_span)</td><td class="p-3 px-6">Tim Penghijauan[span_100](start_span)[span_100](end_span)[span_101](start_span)[span_101](end_span)</td><td class="p-3 px-6">Dede Wiranta[span_102](start_span)[span_102](end_span)[span_103](start_span)[span_103](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50"><td class="p-3 px-6">11[span_104](start_span)[span_104](end_span)[span_105](start_span)[span_105](end_span)</td><td class="p-3 px-6">Divisi Penyuluhan[span_106](start_span)[span_106](end_span)[span_107](start_span)[span_107](end_span)</td><td class="p-3 px-6">Sukarman[span_108](start_span)[span_108](end_span)[span_109](start_span)[span_109](end_span)</td></tr>
-                            <tr class="hover:bg-slate-50"><td class="p-3 px-6">12[span_110](start_span)[span_110](end_span)[span_111](start_span)[span_111](end_span)</td><td class="p-3 px-6">Divisi Operasional / Pengolahan[span_112](start_span)[span_112](end_span)[span_113](start_span)[span_113](end_span)</td><td class="p-3 px-6">Medi[span_114](start_span)[span_114](end_span)[span_115](start_span)[span_115](end_span)</td></tr>
-                        </tbody>
-                    </table>
-                </div>
+            <div class="bg-blue-50 border border-blue-200 rounded-xl p-5">
+                <i class="fas fa-hand-holding-usd text-blue-600 text-2xl mb-2"></i>
+                <h3 class="font-bold text-lg text-blue-900">Iuran Operasional Sabedar</h3>
+                <p class="text-xs text-blue-700 mt-1">Mendukung operasional angkutan armada cator dan pengelolaan hangar pengolahan sampah desa.</p>
             </div>
         </div>
-    </section>
 
-    <!-- Panduan Pilah Sampah -->
-    <section id="pilah" class="py-16 bg-slate-100">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="text-center max-w-3xl mx-auto mb-12">
-                <span class="text-brand-600 font-extrabold text-xs uppercase tracking-widest">Edukasi Warga</span>
-                <h3 class="text-2xl sm:text-3xl font-bold text-slate-900 mt-1">Panduan Pemilahan Sampah 4 Kategori</h3>
-                <p class="text-xs sm:text-sm text-slate-600 mt-2">Berdasarkan standar operasional TPS 3R Sapu Bersih[span_116](start_span)[span_116](end_span)</p>
-            </div>
+        <div class="bg-emerald-600 text-white rounded-xl p-4 text-center shadow">
+            <p class="text-sm font-medium"><i class="fas fa-check-circle mr-2"></i> Portal Web Resmi Berhasil Dideploy & Aktif</p>
+        </div>
+    </main>
 
-            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <!-- Organik -->
-                <div class="bg-white p-6 rounded-2xl border-t-4 border-emerald-500 shadow-sm hover:shadow-md transition">
-                    <div class="w-10 h-10 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold mb-4 text-lg">
-                        <i class="fa-solid fa-leaf"></i>
-                    </div>
-                    <h4 class="font-bold text-emerald-800 text-base mb-2">Sampah Organik[span_117](start_span)[span_117](end_span)</h4>
-                    <p class="text-xs text-slate-500 mb-4">Sampah basah mudah terurai untuk pupuk kompos/maggot[span_118](start_span)[span_118](end_span).</p>
-                    <ul class="text-xs text-slate-700 space-y-2">
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Sisa makanan, nasi, lauk[span_119](start_span)[span_119](end_span)[span_120](start_span)[span_120](end_span)</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Daun, ranting, kulit buah[span_121](start_span)[span_121](end_span)[span_122](start_span)[span_122](end_span)</li>
-                        <li class="flex items-center gap-2"><i class="fa-solid fa-check text-emerald-500"></i> Sayuran & ampas kopi/teh[span_123](start_span)[span_123](end_span)</li>
-                    </ul>
-                </div>
-
-                <!-- Anorganik -->
+    <footer class="bg-gray-800 text-gray-400 text-center text-xs py-6 mt-12">
+        <p>&copy; 2026 KSM TPS 3R Sapu Bersih Desa Dawuan Barat. All Rights Reserved.</p>
+    </footer>
+</body>
+</html>
