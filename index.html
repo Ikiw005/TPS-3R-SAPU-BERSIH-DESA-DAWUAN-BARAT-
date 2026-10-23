@@ -167,3 +167,643 @@
 
 </body>
 </html>
+```html
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rekapitulasi Data Iuran Warga</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Inter Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Alpine.js for lightweight state management -->
+    <script defer src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- SheetJS for Excel Export -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        [x-cloak] { display: none !important; }
+        @media print {
+            .no-print { display: none !important; }
+            .print-only { display: block !important; }
+            body { background: white; color: black; }
+            .card-shadow { box-shadow: none !important; border: 1px solid #e5e7eb !important; }
+        }
+    </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col" x-data="iuranApp()" x-init="initData()">
+
+    <!-- Top Navigation Header -->
+    <header class="bg-slate-900 text-white border-b border-slate-800 sticky top-0 z-30 no-print">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3">
+                <div class="bg-indigo-600 p-2 rounded-lg text-white">
+                    <i data-lucide="receipt-text" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-lg font-bold leading-tight">Rekapitulasi Iuran Warga</h1>
+                    <p class="text-xs text-slate-400">Sistem Pencatatan Data & Transaksi</p>
+                </div>
+            </div>
+            <div class="flex items-center space-x-2 sm:space-x-3">
+                <button @click="exportToExcel()" class="bg-emerald-600 hover:bg-emerald-700 text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-lg flex items-center space-x-1.5 transition">
+                    <i data-lucide="file-spreadsheet" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">Export Excel</span>
+                </button>
+                <button @click="window.print()" class="bg-slate-700 hover:bg-slate-600 text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-lg flex items-center space-x-1.5 transition">
+                    <i data-lucide="printer" class="w-4 h-4"></i>
+                    <span class="hidden sm:inline">Cetak</span>
+                </button>
+                <button @click="openAddModal()" class="bg-indigo-600 hover:bg-indigo-700 text-white text-xs sm:text-sm font-medium px-3 py-2 rounded-lg flex items-center space-x-1.5 transition">
+                    <i data-lucide="user-plus" class="w-4 h-4"></i>
+                    <span>Tambah</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 space-y-6">
+
+        <!-- Print Title -->
+        <div class="hidden print-only mb-6">
+            <h1 class="text-2xl font-bold text-center">Laporan Rekapitulasi Data Iuran Warga</h1>
+            <p class="text-center text-sm text-gray-600" x-text="`Dicetak pada: ${new Date().toLocaleDateString('id-ID')}`"></p>
+        </div>
+
+        <!-- Summary KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 no-print">
+            <!-- Card 1: Total Registrasi -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Terdaftar</p>
+                    <p class="text-2xl font-bold text-slate-900 mt-1" x-text="`${filteredData.length} / ${items.length}`"></p>
+                    <p class="text-xs text-slate-500 mt-1">Warga / Item</p>
+                </div>
+                <div class="bg-blue-50 text-blue-600 p-3 rounded-xl">
+                    <i data-lucide="users" class="w-6 h-6"></i>
+                </div>
+            </div>
+
+            <!-- Card 2: Total Target Nominal -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Nominal Target</p>
+                    <p class="text-2xl font-bold text-slate-900 mt-1" x-text="formatRupiah(stats.totalNominal)"></p>
+                    <p class="text-xs text-slate-500 mt-1" x-text="`Target dari ${filteredData.length} data`"></p>
+                </div>
+                <div class="bg-indigo-50 text-indigo-600 p-3 rounded-xl">
+                    <i data-lucide="wallet" class="w-6 h-6"></i>
+                </div>
+            </div>
+
+            <!-- Card 3: Total Terbayar (Lunas) -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-emerald-600">Total Terbayar (Lunas)</p>
+                    <p class="text-2xl font-bold text-emerald-700 mt-1" x-text="formatRupiah(stats.totalLunas)"></p>
+                    <p class="text-xs text-emerald-600 mt-1" x-text="`${stats.countLunas} warga (${stats.percentLunas}%)`"></p>
+                </div>
+                <div class="bg-emerald-50 text-emerald-600 p-3 rounded-xl">
+                    <i data-lucide="check-circle-2" class="w-6 h-6"></i>
+                </div>
+            </div>
+
+            <!-- Card 4: Total Belum Terbayar -->
+            <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm flex items-center justify-between">
+                <div>
+                    <p class="text-xs font-semibold uppercase tracking-wider text-rose-600">Belum Terbayar</p>
+                    <p class="text-2xl font-bold text-rose-700 mt-1" x-text="formatRupiah(stats.totalBelum)"></p>
+                    <p class="text-xs text-rose-600 mt-1" x-text="`${stats.countBelum} warga (${stats.percentBelum}%)`"></p>
+                </div>
+                <div class="bg-rose-50 text-rose-600 p-3 rounded-xl">
+                    <i data-lucide="x-circle" class="w-6 h-6"></i>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter & Search Controls -->
+        <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-sm space-y-3 no-print">
+            <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
+                <!-- Search Input -->
+                <div class="md:col-span-5 relative">
+                    <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+                        <i data-lucide="search" class="w-4 h-4"></i>
+                    </div>
+                    <input type="text" x-model="searchQuery" placeholder="Cari nama, wilayah, atau nominal..." 
+                        class="w-full pl-9 pr-4 py-2 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                </div>
+
+                <!-- Region Select Filter -->
+                <div class="md:col-span-4">
+                    <select x-model="selectedRegion" class="w-full py-2 px-3 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                        <option value="">Semua Wilayah / RT (Semua)</option>
+                        <template x-for="region in uniqueRegions" :key="region">
+                            <option :value="region" x-text="region"></option>
+                        </template>
+                    </select>
+                </div>
+
+                <!-- Status Filter -->
+                <div class="md:col-span-3">
+                    <select x-model="selectedStatus" class="w-full py-2 px-3 bg-slate-50 border border-slate-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:bg-white transition">
+                        <option value="">Semua Status Pembayaran</option>
+                        <option value="Lunas">Lunas (Centang ✓)</option>
+                        <option value="Belum Lunas">Belum Lunas (Silang ✗)</option>
+                        <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Quick Filter Chips & Action Controls -->
+            <div class="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-slate-100 text-xs">
+                <div class="flex items-center space-x-2 overflow-x-auto py-1">
+                    <span class="text-slate-500 font-medium">Filter Cepat:</span>
+                    <button @click="selectedStatus = ''; selectedRegion = ''; searchQuery = ''" 
+                        class="px-2.5 py-1 rounded-full border border-slate-300 hover:bg-slate-100 text-slate-600 transition">
+                        Reset Filter
+                    </button>
+                    <button @click="selectedStatus = 'Lunas'" 
+                        class="px-2.5 py-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200 hover:bg-emerald-100 transition">
+                        ✓ Lunas
+                    </button>
+                    <button @click="selectedStatus = 'Belum Lunas'" 
+                        class="px-2.5 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200 hover:bg-rose-100 transition">
+                        ✗ Belum Lunas
+                    </button>
+                </div>
+                <div class="text-slate-500">
+                    Menampilkan <strong x-text="filteredData.length" class="text-slate-800"></strong> dari <strong x-text="items.length" class="text-slate-800"></strong> data
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Data Table Card -->
+        <div class="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="bg-slate-100/75 border-b border-slate-200 text-xs uppercase font-semibold text-slate-600 tracking-wider">
+                            <th class="py-3 px-4 w-12 text-center">No</th>
+                            <th class="py-3 px-4">Nama Warga / Keterangan</th>
+                            <th class="py-3 px-4">Wilayah / RT</th>
+                            <th class="py-3 px-4 text-right">Nominal (Rp)</th>
+                            <th class="py-3 px-4 text-center">Status</th>
+                            <th class="py-3 px-4 text-center no-print w-28">Aksi</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 text-sm">
+                        <template x-for="(item, index) in filteredData" :key="item.id">
+                            <tr class="hover:bg-slate-50/80 transition group">
+                                <td class="py-3 px-4 text-center text-slate-400 text-xs font-mono" x-text="index + 1"></td>
+                                <td class="py-3 px-4 font-medium text-slate-800" x-text="item.name"></td>
+                                <td class="py-3 px-4 text-slate-600">
+                                    <span class="inline-flex items-center px-2.5 py-0.5 rounded-md text-xs font-medium bg-slate-100 text-slate-700 border border-slate-200" x-text="item.region"></span>
+                                </td>
+                                <td class="py-3 px-4 text-right font-mono font-semibold text-slate-700" x-text="item.nominal ? formatRupiah(item.nominal) : '-'"></td>
+                                <td class="py-3 px-4 text-center">
+                                    <span x-if="item.status === 'Lunas'" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-emerald-100 text-emerald-800 border border-emerald-200">
+                                        <i data-lucide="check" class="w-3 h-3 mr-1"></i> Lunas
+                                    </span>
+                                    <span x-if="item.status === 'Belum Lunas'" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-semibold bg-rose-100 text-rose-800 border border-rose-200">
+                                        <i data-lucide="x" class="w-3 h-3 mr-1"></i> Belum Lunas
+                                    </span>
+                                    <span x-if="item.status === 'Tanpa Keterangan'" class="inline-flex items-center px-2.5 py-1 rounded-full text-xs font-medium bg-slate-100 text-slate-600 border border-slate-200">
+                                        Tanpa Keterangan
+                                    </span>
+                                </td>
+                                <td class="py-3 px-4 text-center no-print">
+                                    <div class="flex items-center justify-center space-x-1">
+                                        <button @click="editRecord(item)" title="Edit Data" class="p-1.5 text-slate-400 hover:text-indigo-600 hover:bg-indigo-50 rounded-lg transition">
+                                            <i data-lucide="edit-3" class="w-4 h-4"></i>
+                                        </button>
+                                        <button @click="deleteRecord(item.id)" title="Hapus Data" class="p-1.5 text-slate-400 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition">
+                                            <i data-lucide="trash-2" class="w-4 h-4"></i>
+                                        </button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </template>
+
+                        <!-- Empty State -->
+                        <tr x-show="filteredData.length === 0">
+                            <td colspan="6" class="py-12 text-center text-slate-400">
+                                <i data-lucide="folder-search" class="w-10 h-10 mx-auto mb-2 text-slate-300"></i>
+                                <p class="text-base font-medium">Tidak ada data ditemukan</p>
+                                <p class="text-xs mt-1">Coba sesuaikan kata kunci pencarian atau filter Anda.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Table Footer Summary -->
+            <div class="bg-slate-50 px-4 py-3 border-t border-slate-200 flex flex-wrap items-center justify-between text-xs text-slate-600">
+                <div>
+                    Menampilkan total <span class="font-bold text-slate-800" x-text="filteredData.length"></span> baris data.
+                </div>
+                <div class="flex items-center space-x-4">
+                    <span>Subtotal Terbayar: <strong class="text-emerald-700 font-mono" x-text="formatRupiah(stats.totalLunas)"></strong></span>
+                    <span>Sisa: <strong class="text-rose-700 font-mono" x-text="formatRupiah(stats.totalBelum)"></strong></span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Danger Zone / Data Management Footer -->
+        <div class="flex justify-between items-center text-xs text-slate-400 pt-4 no-print">
+            <button @click="resetToDefaultData()" class="hover:text-rose-600 underline transition">
+                Reset ke Data Default Pabrik (134 Data Asli)
+            </button>
+            <p>Data tersimpan otomatis di browser secara lokal (LocalStorage).</p>
+        </div>
+
+    </main>
+
+    <!-- Modal Form Add/Edit Record -->
+    <div x-cloak x-show="showModal" class="fixed inset-0 z-50 overflow-y-auto no-print" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+        <!-- Backdrop -->
+        <div x-show="showModal" x-transition.opacity class="fixed inset-0 bg-slate-900/60 backdrop-blur-sm"></div>
+
+        <div class="flex min-h-full items-center justify-center p-4 text-center sm:p-0">
+            <div x-show="showModal" x-transition.scale.origin.center class="relative transform overflow-hidden rounded-2xl bg-white text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg border border-slate-100">
+                
+                <!-- Modal Header -->
+                <div class="bg-slate-900 px-6 py-4 flex items-center justify-between text-white">
+                    <h3 class="text-base font-semibold" x-text="isEdit ? 'Edit Data Warga' : 'Tambah Data Warga Baru'"></h3>
+                    <button @click="closeModal()" class="text-slate-400 hover:text-white transition">
+                        <i data-lucide="x" class="w-5 h-5"></i>
+                    </button>
+                </div>
+
+                <!-- Modal Body Form -->
+                <form @submit.prevent="saveRecord()" class="p-6 space-y-4">
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Nama Warga / Keterangan</label>
+                        <input type="text" x-model="form.name" required placeholder="Contoh: Pak Ahmad / Warung Kopi" 
+                            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                    </div>
+
+                    <div>
+                        <label class="block text-xs font-medium text-slate-700 mb-1">Wilayah / RT</label>
+                        <input type="text" x-model="form.region" required list="region-options" placeholder="Pilih atau ketik wilayah..." 
+                            class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                        <datalist id="region-options">
+                            <template x-for="r in uniqueRegions" :key="r">
+                                <option :value="r"></option>
+                            </template>
+                        </datalist>
+                    </div>
+
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Nominal (Rp)</label>
+                            <input type="number" x-model.number="form.nominal" min="0" step="1000" placeholder="30000" 
+                                class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none font-mono">
+                        </div>
+
+                        <div>
+                            <label class="block text-xs font-medium text-slate-700 mb-1">Status Pembayaran</label>
+                            <select x-model="form.status" class="w-full px-3 py-2 border border-slate-300 rounded-lg text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none">
+                                <option value="Lunas">Lunas (✓)</option>
+                                <option value="Belum Lunas">Belum Lunas (✗)</option>
+                                <option value="Tanpa Keterangan">Tanpa Keterangan</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="mt-6 flex justify-end space-x-3 pt-4 border-t border-slate-100">
+                        <button type="button" @click="closeModal()" class="px-4 py-2 border border-slate-300 rounded-lg text-sm font-medium text-slate-700 hover:bg-slate-50 transition">
+                            Batal
+                        </button>
+                        <button type="submit" class="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition flex items-center space-x-1.5">
+                            <i data-lucide="check" class="w-4 h-4"></i>
+                            <span>Simpan</span>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Application Script Logic -->
+    <script>
+        // Initial dataset containing all 134 records parsed from the physical notebooks
+        const initialDataset = [
+            // Items 1-32: Daftar Utama
+            { id: 1, name: "Mista", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 2, name: "Wanda", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 3, name: "Iyon", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 4, name: "Dacih", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 5, name: "Atih", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 6, name: "Nia", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 7, name: "Salip", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 8, name: "Aa", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 9, name: "Nani", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 10, name: "Novi", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 11, name: "Sati", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 12, name: "Asih", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 13, name: "Tompel", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 14, name: "Yogas", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 15, name: "Ai", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 16, name: "Jasang", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 17, name: "Darmin", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 18, name: "Aas", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 19, name: "Eva", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 20, name: "Cici", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 21, name: "Eem", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 22, name: "Darya", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 23, name: "Wahyu", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 24, name: "Awis", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 25, name: "Imam", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 26, name: "Sela", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 27, name: "Pa. Wawan", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 28, name: "Kayah", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 29, name: "Dayat", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 30, name: "Agus", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 31, name: "H. Ami", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+            { id: 32, name: "Omih", region: "Daftar Utama 1-32", nominal: 0, status: "Tanpa Keterangan" },
+
+            // Items 33-45: RT 001/008
+            { id: 33, name: "Dadi Mulyadi", region: "RT 001/008", nominal: 30000, status: "Lunas" },
+            { id: 34, name: "Sunaryo", region: "RT 001/008", nominal: 30000, status: "Lunas" },
+            { id: 35, name: "Sam - Sam", region: "RT 001/008", nominal: 30000, status: "Lunas" },
+            { id: 36, name: "Edi", region: "RT 001/008", nominal: 30000, status: "Lunas" },
+            { id: 37, name: "Roni", region: "RT 001/008", nominal: 30000, status: "Lunas" },
+            { id: 38, name: "Dadi Haryadi", region: "RT 001/008", nominal: 30000, status: "Lunas" },
+            { id: 39, name: "Ucu Suratman", region: "RT 001/008", nominal: 20000, status: "Lunas" },
+            { id: 40, name: "Nanang", region: "RT 001/008", nominal: 20000, status: "Lunas" },
+            { id: 41, name: "Es Krim", region: "RT 001/008", nominal: 20000, status: "Lunas" },
+            { id: 42, name: "Laundri", region: "RT 001/008", nominal: 20000, status: "Lunas" },
+            { id: 43, name: "T. Iis", region: "RT 001/008", nominal: 30000, status: "Lunas" },
+            { id: 44, name: "Heru", region: "RT 001/008", nominal: 50000, status: "Lunas" },
+            { id: 45, name: "Empud", region: "RT 001/008", nominal: 30000, status: "Lunas" },
+
+            // Items 46-54: RT 002/008
+            { id: 46, name: "Entang", region: "RT 002/008", nominal: 30000, status: "Lunas" },
+            { id: 47, name: "Mamah Uu", region: "RT 002/008", nominal: 30000, status: "Lunas" },
+            { id: 48, name: "Asep Mikdar", region: "RT 002/008", nominal: 30000, status: "Lunas" },
+            { id: 49, name: "Bu Edeh", region: "RT 002/008", nominal: 30000, status: "Lunas" },
+            { id: 50, name: "H. Bambang", region: "RT 002/008", nominal: 20000, status: "Lunas" },
+            { id: 51, name: "Dadan Samsidar", region: "RT 002/008", nominal: 35000, status: "Lunas" },
+            { id: 52, name: "Encum", region: "RT 002/008", nominal: 20000, status: "Lunas" },
+            { id: 53, name: "Kuningan", region: "RT 002/008", nominal: 20000, status: "Lunas" },
+            { id: 54, name: "Udin", region: "RT 002/008", nominal: 30000, status: "Lunas" },
+
+            // Items 55-59: 02/07
+            { id: 55, name: "H. Robiah", region: "02/07", nominal: 30000, status: "Lunas" },
+            { id: 56, name: "Pa Upen", region: "02/07", nominal: 40000, status: "Lunas" },
+            { id: 57, name: "Enas", region: "02/07", nominal: 20000, status: "Lunas" },
+            { id: 58, name: "Atin / Dara", region: "02/07", nominal: 30000, status: "Tanpa Keterangan" },
+            { id: 59, name: "H. Oji", region: "02/07", nominal: 30000, status: "Lunas" },
+
+            // Items 60-66: RT 003/008
+            { id: 60, name: "Amar", region: "RT 003/008", nominal: 30000, status: "Lunas" },
+            { id: 61, name: "Ust. Unas", region: "RT 003/008", nominal: 30000, status: "Lunas" },
+            { id: 62, name: "Hendra", region: "RT 003/008", nominal: 30000, status: "Lunas" },
+            { id: 63, name: "Pa Lili", region: "RT 003/008", nominal: 30000, status: "Lunas" },
+            { id: 64, name: "Andri / Gina", region: "RT 003/008", nominal: 40000, status: "Lunas" },
+            { id: 65, name: "Bu Enur", region: "RT 003/008", nominal: 30000, status: "Lunas" },
+            { id: 66, name: "Endah", region: "RT 003/008", nominal: 30000, status: "Tanpa Keterangan" },
+
+            // Items 67-78: RT 003/07
+            { id: 67, name: "Rohim", region: "RT 003/07", nominal: 30000, status: "Lunas" },
+            { id: 68, name: "Kusmiati", region: "RT 003/07", nominal: 30000, status: "Lunas" },
+            { id: 69, name: "Empat", region: "RT 003/07", nominal: 20000, status: "Lunas" },
+            { id: 70, name: "Ace", region: "RT 003/07", nominal: 40000, status: "Lunas" },
+            { id: 71, name: "Hendri", region: "RT 003/07", nominal: 40000, status: "Lunas" },
+            { id: 72, name: "Eros", region: "RT 003/07", nominal: 30000, status: "Lunas" },
+            { id: 73, name: "Rahmat", region: "RT 003/07", nominal: 30000, status: "Lunas" },
+            { id: 74, name: "Saman", region: "RT 003/07", nominal: 40000, status: "Lunas" },
+            { id: 75, name: "Yuyu", region: "RT 003/07", nominal: 30000, status: "Lunas" },
+            { id: 76, name: "Jajang", region: "RT 003/07", nominal: 30000, status: "Lunas" },
+            { id: 77, name: "Tk. Aep", region: "RT 003/07", nominal: 30000, status: "Lunas" },
+            { id: 78, name: "Iwan", region: "RT 003/07", nominal: 30000, status: "Lunas" },
+
+            // Items 79-89: RT 04/07
+            { id: 79, name: "Daniel", region: "RT 04/07", nominal: 40000, status: "Lunas" },
+            { id: 80, name: "Ma Ii", region: "RT 04/07", nominal: 40000, status: "Lunas" },
+            { id: 81, name: "Mitra", region: "RT 04/07", nominal: 40000, status: "Lunas" },
+            { id: 82, name: "Elin", region: "RT 04/07", nominal: 40000, status: "Lunas" },
+            { id: 83, name: "Enih", region: "RT 04/07", nominal: 50000, status: "Lunas" },
+            { id: 84, name: "Rusnah", region: "RT 04/07", nominal: 50000, status: "Lunas" },
+            { id: 85, name: "Rw. Engkus", region: "RT 04/07", nominal: 30000, status: "Lunas" },
+            { id: 86, name: "Hayati", region: "RT 04/07", nominal: 40000, status: "Lunas" },
+            { id: 87, name: "Ma Enok", region: "RT 04/07", nominal: 50000, status: "Lunas" },
+            { id: 88, name: "Ayu Fitri", region: "RT 04/07", nominal: 30000, status: "Lunas" },
+            { id: 89, name: "Masanah", region: "RT 04/07", nominal: 30000, status: "Lunas" },
+
+            // Items 90-108: Payuyon
+            { id: 90, name: "Acih", region: "Payuyon", nominal: 25000, status: "Lunas" },
+            { id: 91, name: "Ani", region: "Payuyon", nominal: 25000, status: "Tanpa Keterangan" },
+            { id: 92, name: "Elsa", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 93, name: "Ma Endah", region: "Payuyon", nominal: 25000, status: "Lunas" },
+            { id: 94, name: "Teh Novi", region: "Payuyon", nominal: 25000, status: "Tanpa Keterangan" },
+            { id: 95, name: "Rapin", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 96, name: "Vina", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 97, name: "Tia", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 98, name: "Ucu", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 99, name: "Asmita", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 100, name: "H. Obay", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 101, name: "Lotek", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 102, name: "Utan", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 103, name: "Masjid", region: "Payuyon", nominal: 30000, status: "Tanpa Keterangan" },
+            { id: 104, name: "Dewi", region: "Payuyon", nominal: 30000, status: "Tanpa Keterangan" },
+            { id: 105, name: "Ani", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 106, name: "Neng Nde", region: "Payuyon", nominal: 30000, status: "Lunas" },
+            { id: 107, name: "Bapa Uu", region: "Payuyon", nominal: 50000, status: "Lunas" },
+            { id: 108, name: "Vina", region: "Payuyon", nominal: 50000, status: "Lunas" },
+
+            // Items 109-115: Catatan Akhir
+            { id: 109, name: "Unyil", region: "Catatan Akhir", nominal: 30000, status: "Lunas" },
+            { id: 110, name: "Riah", region: "Catatan Akhir", nominal: 30000, status: "Lunas" },
+            { id: 111, name: "Epul", region: "Catatan Akhir", nominal: 30000, status: "Lunas" },
+            { id: 112, name: "Dewi", region: "Catatan Akhir", nominal: 30000, status: "Lunas" },
+            { id: 113, name: "Wa Erun", region: "Catatan Akhir", nominal: 30000, status: "Lunas" },
+            { id: 114, name: "Bp. Nana", region: "Catatan Akhir", nominal: 30000, status: "Tanpa Keterangan" },
+            { id: 115, name: "Bilqis", region: "Catatan Akhir", nominal: 30000, status: "Lunas" },
+
+            // Items 116-120: Kamuning
+            { id: 116, name: "Ma Enat", region: "Kamuning", nominal: 30000, status: "Lunas" },
+            { id: 117, name: "Ibu Aas", region: "Kamuning", nominal: 30000, status: "Lunas" },
+            { id: 118, name: "Teh Emis", region: "Kamuning", nominal: 30000, status: "Belum Lunas" },
+            { id: 119, name: "Bu Idoh", region: "Kamuning", nominal: 30000, status: "Belum Lunas" },
+            { id: 120, name: "Kontrakan", region: "Kamuning", nominal: 300000, status: "Belum Lunas" },
+
+            // Items 121-122: Payuyon Perbatasan
+            { id: 121, name: "Sayuran", region: "Payuyon Perbatasan", nominal: 30000, status: "Belum Lunas" },
+            { id: 122, name: "Ibu Isum", region: "Payuyon Perbatasan", nominal: 30000, status: "Belum Lunas" },
+
+            // Items 123-124: Payuyon Gang Masjid
+            { id: 123, name: "Pa Ade", region: "Payuyon Gang Masjid", nominal: 30000, status: "Belum Lunas" },
+            { id: 124, name: "Pa Jajang", region: "Payuyon Gang Masjid", nominal: 30000, status: "Lunas" },
+
+            // Items 125-127: Payuyon Dpan Jalan
+            { id: 125, name: "Lotek", region: "Payuyon Dpan Jalan", nominal: 40000, status: "Lunas" },
+            { id: 126, name: "Tahu", region: "Payuyon Dpan Jalan", nominal: 30000, status: "Lunas" },
+            { id: 127, name: "Entin", region: "Payuyon Dpan Jalan", nominal: 30000, status: "Belum Lunas" },
+
+            // Items 128-131: Tegal Wangi RT 002/007
+            { id: 128, name: "Mimin", region: "Tegal Wangi RT 002/007", nominal: 30000, status: "Belum Lunas" },
+            { id: 129, name: "Ust", region: "Tegal Wangi RT 002/007", nominal: 30000, status: "Belum Lunas" },
+            { id: 130, name: "Teh Mala", region: "Tegal Wangi RT 002/007", nominal: 25000, status: "Belum Lunas" },
+            { id: 131, name: "Ujang", region: "Tegal Wangi RT 002/007", nominal: 30000, status: "Belum Lunas" },
+
+            // Items 132-134: Tegal Wangi RT 03/08
+            { id: 132, name: "Empud", region: "Tegal Wangi RT 03/08", nominal: 30000, status: "Belum Lunas" },
+            { id: 133, name: "Engkus", region: "Tegal Wangi RT 03/08", nominal: 30000, status: "Belum Lunas" },
+            { id: 134, name: "Henda", region: "Tegal Wangi RT 03/08", nominal: 30000, status: "Belum Lunas" }
+        ];
+
+        function iuranApp() {
+            return {
+                items: [],
+                searchQuery: '',
+                selectedRegion: '',
+                selectedStatus: '',
+                showModal: false,
+                isEdit: false,
+                form: { id: null, name: '', region: '', nominal: 30000, status: 'Lunas' },
+
+                initData() {
+                    const saved = localStorage.getItem('iuran_warga_db');
+                    if (saved) {
+                        try {
+                            this.items = JSON.parse(saved);
+                        } catch (e) {
+                            this.items = [...initialDataset];
+                        }
+                    } else {
+                        this.items = [...initialDataset];
+                    }
+                    this.saveToStorage();
+                    this.$nextTick(() => { lucide.createIcons(); });
+                },
+
+                saveToStorage() {
+                    localStorage.setItem('iuran_warga_db', JSON.stringify(this.items));
+                },
+
+                formatRupiah(amount) {
+                    if (amount === null || amount === undefined || isNaN(amount)) return 'Rp 0';
+                    return 'Rp ' + amount.toLocaleString('id-ID');
+                },
+
+                get uniqueRegions() {
+                    const regions = this.items.map(i => i.region);
+                    return [...new Set(regions)].sort();
+                },
+
+                get filteredData() {
+                    return this.items.filter(item => {
+                        const matchesSearch = item.name.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                                              item.region.toLowerCase().includes(this.searchQuery.toLowerCase()) ||
+                                              item.nominal.toString().includes(this.searchQuery);
+                        const matchesRegion = !this.selectedRegion || item.region === this.selectedRegion;
+                        const matchesStatus = !this.selectedStatus || item.status === this.selectedStatus;
+                        return matchesSearch && matchesRegion && matchesStatus;
+                    });
+                },
+
+                get stats() {
+                    const data = this.filteredData;
+                    const totalNominal = data.reduce((acc, curr) => acc + (curr.nominal || 0), 0);
+                    
+                    const lunasItems = data.filter(i => i.status === 'Lunas');
+                    const belumItems = data.filter(i => i.status === 'Belum Lunas');
+
+                    const totalLunas = lunasItems.reduce((acc, curr) => acc + (curr.nominal || 0), 0);
+                    const totalBelum = belumItems.reduce((acc, curr) => acc + (curr.nominal || 0), 0);
+
+                    const countLunas = lunasItems.length;
+                    const countBelum = belumItems.length;
+                    const countTotal = data.length || 1;
+
+                    return {
+                        totalNominal,
+                        totalLunas,
+                        totalBelum,
+                        countLunas,
+                        countBelum,
+                        percentLunas: Math.round((countLunas / countTotal) * 100) || 0,
+                        percentBelum: Math.round((countBelum / countTotal) * 100) || 0
+                    };
+                },
+
+                openAddModal() {
+                    this.isEdit = false;
+                    this.form = { id: Date.now(), name: '', region: this.selectedRegion || 'RT 001/008', nominal: 30000, status: 'Lunas' };
+                    this.showModal = true;
+                    this.$nextTick(() => { lucide.createIcons(); });
+                },
+
+                editRecord(item) {
+                    this.isEdit = true;
+                    this.form = { ...item };
+                    this.showModal = true;
+                    this.$nextTick(() => { lucide.createIcons(); });
+                },
+
+                closeModal() {
+                    this.showModal = false;
+                },
+
+                saveRecord() {
+                    if (!this.form.name || !this.form.region) return;
+
+                    if (this.isEdit) {
+                        const idx = this.items.findIndex(i => i.id === this.form.id);
+                        if (idx !== -1) this.items[idx] = { ...this.form };
+                    } else {
+                        this.items.push({ ...this.form, id: Date.now() });
+                    }
+
+                    this.saveToStorage();
+                    this.closeModal();
+                },
+
+                deleteRecord(id) {
+                    if (confirm('Apakah Anda yakin ingin menghapus data warga ini?')) {
+                        this.items = this.items.filter(i => i.id !== id);
+                        this.saveToStorage();
+                    }
+                },
+
+                resetToDefaultData() {
+                    if (confirm('Tindakan ini akan mengembalikan seluruh data ke 134 data bawaan asli dari buku catatan. Lanjutkan?')) {
+                        this.items = [...initialDataset];
+                        this.saveToStorage();
+                    }
+                },
+
+                exportToExcel() {
+                    const exportData = this.filteredData.map((item, index) => ({
+                        'No': index + 1,
+                        'Nama Warga': item.name,
+                        'Wilayah / RT': item.region,
+                        'Nominal (Rp)': item.nominal,
+                        'Status Pembayaran': item.status
+                    }));
+
+                    const worksheet = XLSX.utils.json_to_sheet(exportData);
+                    const workbook = XLSX.utils.book_new();
+                    XLSX.utils.book_append_sheet(workbook, worksheet, "Rekap Iuran Warga");
+
+                    // Auto-fit column width
+                    const max_width = exportData.reduce((w, r) => Math.max(w, r['Nama Warga'].length), 10);
+                    worksheet['!cols'] = [ { wch: 6 }, { wch: max_width + 5 }, { wch: 25 }, { wch: 15 }, { wch: 18 } ];
+
+                    XLSX.writeFile(workbook, `Rekap_Iuran_Warga_${new Date().toISOString().slice(0,10)}.xlsx`);
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+```
