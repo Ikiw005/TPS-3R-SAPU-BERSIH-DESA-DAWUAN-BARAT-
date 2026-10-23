@@ -1,59 +1,169 @@
 <!DOCTYPE html>
-<html lang="id">
+<html lang="id" class="scroll-smooth">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TPS 3R Sapu Bersih - Desa Dawuan Barat</title>
+    <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <img src="Biru Melingkar Sederhana Ikon Minimalis Merek Air Minum Logo_20260928_174653_0000.png" alt="Logo TPS 3R Sapu Bersih" class="w-10 h-10 object-contain rounded-full bg-white p-1 border border-emerald-300">
+    <!-- FontAwesome Icon -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
-<body class="bg-gray-100 text-gray-800 font-sans">
-    <header class="bg-emerald-700 text-white shadow-lg sticky top-0 z-50">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
+<body class="bg-gray-50 text-gray-800 font-sans antialiased">
+
+    <!-- HEADER / NAVIGASI -->
+    <header class="bg-emerald-700 text-white shadow-md sticky top-0 z-50">
+        <div class="container mx-auto px-4 py-3 flex justify-between items-center">
+            <!-- Logo & Judul Sejajar Sempurna -->
             <div class="flex items-center space-x-3">
-                <img src=""></i>
-                <div>
-                    <h1 class="text-xl font-bold leading-tight">TPS 3R SAPU BERSIH</h1>
-                    <p class="text-xs text-emerald-200">Desa Dawuan Barat, Kecamatan Cikampek Kabupaten Karawang</p>
+                <!-- Nama File Gambar Asli Anda Dipanggil di Sini -->
+                <img src="Biru Melingkar Sederhana Ikon Minimalis Merek Air Minum Logo_20260928_174653_0000.png" alt="Logo TPS 3R Sapu Bersih" class="w-11 h-11 object-contain rounded-full bg-white p-1 border-2 border-emerald-300 shadow-sm shrink-0">
+                <div class="flex flex-col justify-center">
+                    <h1 class="text-lg md:text-xl font-bold leading-none tracking-wide">TPS 3R SAPU BERSIH</h1>
+                    <p class="text-xs text-emerald-200 leading-none mt-1 font-medium">Desa Dawuan Barat, Cikampek, Karawang</p>
                 </div>
             </div>
+            
+            <!-- Tombol Bantuan WA -->
+            <a href="https://wa.me/6281234567890" target="_blank" class="hidden sm:inline-flex items-center space-x-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-semibold px-3 py-2 rounded-lg transition duration-200 shadow">
+                <i class="fab fa-whatsapp text-base text-green-300"></i>
+                <span>Kontak KSM</span>
+            </a>
         </div>
     </header>
 
-    <main class="container mx-auto px-4 py-8 max-w-4xl">
-        <div class="bg-white rounded-2xl shadow-md p-6 mb-6 border-l-8 border-emerald-600">
-            <span class="bg-emerald-100 text-emerald-800 text-xs font-semibold px-2.5 py-0.5 rounded-full">Sistem Layanan Sampah Digital</span>
-            <h2 class="text-2xl font-bold mt-2 text-gray-900">Selamat Datang di Portal Resmi TPS 3R "Sapu Bersih" Desa Dawuan Barat Kecamatan Cikampek Kabupaten Karawang</h2>
-            <p class="text-gray-600 text-sm mt-2 leading-relaxed">
-                Fasilitas Pengolahan Sampah 3R (Reduce, Reuse, Recycle) untuk mewujudkan lingkungan Desa Dawuan Barat yang bersih, hijau, dan berkelanjutan.
+    <!-- UTAMA -->
+    <main class="container mx-auto px-4 py-6 max-w-4xl space-y-8">
+
+        <!-- HERO CARD (KARTU UTAMA) -->
+        <section class="bg-white rounded-2xl shadow-sm border border-gray-100 overflow-hidden">
+            <!-- Banner Gambar Hangar / Kegiatan -->
+            <div class="relative h-48 sm:h-64 bg-emerald-900 overflow-hidden">
+                <img src="banner.jpg" alt="Fasilitas TPS 3R Sapu Bersih" class="w-full h-full object-cover opacity-80" onerror="this.onerror=null; this.src='https://images.unsplash.com/photo-1532996122724-e3c354a0b15b?auto=format&fit=crop&w=1000&q=80';">
+                <div class="absolute inset-0 bg-gradient-to-t from-gray-900/90 via-gray-900/40 to-transparent"></div>
+                <div class="absolute bottom-4 left-4 right-4 text-white">
+                    <span class="bg-emerald-500 text-white text-xs font-bold px-2.5 py-1 rounded-full uppercase tracking-wider">Sistem Layanan Sampah Digital</span>
+                    <h2 class="text-xl sm:text-2xl font-extrabold mt-2 leading-snug">Portal Resmi TPS 3R "Sapu Bersih"</h2>
+                    <p class="text-xs sm:text-sm text-gray-200 mt-1">Mewujudkan Desa Dawuan Barat Bersih, Hijau, dan Berkelanjutan</p>
+                </div>
+            </div>
+
+            <!-- Detail Legalitas & Deskripsi -->
+            <div class="p-5 sm:p-6">
+                <p class="text-gray-600 text-sm leading-relaxed">
+                    Fasilitas Pengolahan Sampah berbasis masyarakat dengan prinsip 3R (<em>Reduce, Reuse, Recycle</em>). Kami mengelola sampah rumah tangga menjadi pupuk kompos, pakan maggot BSF, serta bahan daur ulang bernilai ekonomi.
+                </p>
+                
+                <!-- Tag Legalitas -->
+                <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs text-gray-600">
+                    <div class="flex items-center space-x-2 bg-emerald-50/60 p-2.5 rounded-lg border border-emerald-100">
+                        <i class="fas fa-file-contract text-emerald-600 text-base"></i>
+                        <div><span class="font-bold text-gray-800">SK DLH:</span> No. 600.4.15/1910/BERSIH/2026</div>
+                    </div>
+                    <div class="flex items-center space-x-2 bg-blue-50/60 p-2.5 rounded-lg border border-blue-100">
+                        <i class="fas fa-award text-blue-600 text-base"></i>
+                        <div><span class="font-bold text-gray-800">SK Kades:</span> No. 148.1/SK.14/Ds/2026</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- RINGKASAN STATISTIK OPERASIONAL -->
+        <section class="grid grid-cols-3 gap-3 text-center">
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                <div class="text-emerald-600 text-xl font-bold mb-1">100%</div>
+                <div class="text-xs text-gray-500 font-medium">Terlayani</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                <div class="text-emerald-600 text-xl font-bold mb-1">3R</div>
+                <div class="text-xs text-gray-500 font-medium">Pengolahan</div>
+            </div>
+            <div class="bg-white p-4 rounded-xl border border-gray-100 shadow-sm">
+                <div class="text-emerald-600 text-xl font-bold mb-1">Viar 300</div>
+                <div class="text-xs text-gray-500 font-medium">Armada Cator</div>
+            </div>
+        </section>
+
+        <!-- PANDUAN PEMILAHAN SAMPAH -->
+        <section>
+            <div class="flex items-center space-x-2 mb-4">
+                <i class="fas fa-filter text-emerald-600 text-lg"></i>
+                <h3 class="text-lg font-bold text-gray-900">Panduan Pemilahan Sampah Rumah Tangga</h3>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <!-- Organik -->
+                <div class="bg-emerald-50 border border-emerald-200 rounded-2xl p-4 relative overflow-hidden">
+                    <div class="w-2 h-full bg-emerald-500 absolute top-0 left-0"></div>
+                    <div class="pl-2">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-emerald-900">1. Organik</h4>
+                            <i class="fas fa-leaf text-emerald-600 text-lg"></i>
+                        </div>
+                        <p class="text-xs text-emerald-800 leading-relaxed">Sisa makanan, sayuran, buah busuk, & daun gugur. Dijadikan komposter & maggot BSF.</p>
+                    </div>
+                </div>
+
+                <!-- Anorganik -->
+                <div class="bg-amber-50 border border-amber-200 rounded-2xl p-4 relative overflow-hidden">
+                    <div class="w-2 h-full bg-amber-500 absolute top-0 left-0"></div>
+                    <div class="pl-2">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-amber-900">2. Anorganik</h4>
+                            <i class="fas fa-box text-amber-600 text-lg"></i>
+                        </div>
+                        <p class="text-xs text-amber-800 leading-relaxed">Botol plastik, kardus, kaleng, & kaca. Dipilah untuk didaur ulang bernilai guna.</p>
+                    </div>
+                </div>
+
+                <!-- B3 / Residu -->
+                <div class="bg-red-50 border border-red-200 rounded-2xl p-4 relative overflow-hidden">
+                    <div class="w-2 h-full bg-red-500 absolute top-0 left-0"></div>
+                    <div class="pl-2">
+                        <div class="flex justify-between items-center mb-2">
+                            <h4 class="font-bold text-red-900">3. B3 & Residu</h4>
+                            <i class="fas fa-biohazard text-red-600 text-lg"></i>
+                        </div>
+                        <p class="text-xs text-red-800 leading-relaxed">Baterai bekas, popok, masker, obat kadaluarsa. Dikelola khusus ke TPA pemda.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- LAYANAN & IURAN SABEDAR -->
+        <section class="bg-gradient-to-br from-emerald-800 to-emerald-900 text-white rounded-2xl p-6 shadow-md">
+            <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center space-y-4 sm:space-y-0">
+                <div>
+                    <span class="bg-emerald-700 text-emerald-200 text-xs font-semibold px-2.5 py-1 rounded-md">Dukungan Operasional</span>
+                    <h3 class="text-xl font-bold mt-2">Iuran Kebersihan Sabedar</h3>
+                    <p class="text-xs text-emerald-100 mt-1 max-w-lg leading-relaxed">
+                        Iuran rutin warga mendukung pemeliharaan armada kendaraan Cator Viar 300, operasional Petugas Hangar, serta BBM pengangkutan sampah harian.
+                    </p>
+                </div>
+                <a href="https://wa.me/6281234567890?text=Halo%20Pengurus%20TPS%203R%20Sapu%20Bersih,%20saya%20ingin%20bertanya%20mengenai%20iuran%20kebersihan." target="_blank" class="bg-white text-emerald-900 hover:bg-emerald-50 text-xs font-bold px-4 py-3 rounded-xl transition shadow flex items-center space-x-2 shrink-0">
+                    <i class="fas fa-hand-holding-dollar text-emerald-600"></i>
+                    <span>Informasi Iuran</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- STATUS DEPLOYMENT -->
+        <div class="bg-gray-200 text-gray-700 rounded-xl p-3 text-center border border-gray-300">
+            <p class="text-xs font-medium flex items-center justify-center space-x-2">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-ping"></span>
+                <span>Portal Sistem Online & Dideploy Melalui GitHub Pages</span>
             </p>
-            <div class="mt-4 pt-4 border-t border-gray-100 grid grid-cols-2 gap-4 text-xs text-gray-500">
-                <div><strong>SK DLH:</strong> No. 600.4.15/1910/BERSIH/2026</div>
-                <div><strong>SK Kades:</strong> No. 148.1/SK.14/Ds/2026</div>
-            </div>
         </div>
 
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-            <div class="bg-emerald-50 border border-emerald-200 rounded-xl p-5">
-                <i class="fas fa-dumpster text-emerald-600 text-2xl mb-2"></i>
-                <h3 class="font-bold text-lg text-emerald-900">Panduan Pemilahan Sampah</h3>
-                <p class="text-xs text-emerald-700 mt-1">Pisahkan sampah Organik (Sisa Makanan), Anorganik (Plastik/Kardus), dan B3 dari rumah tangga Anda.</p>
-            </div>
-            <div class="bg-blue-50 border border-blue-200 rounded-xl p-5">
-                <i class="fas fa-hand-holding-usd text-blue-600 text-2xl mb-2"></i>
-                <h3 class="font-bold text-lg text-blue-900">Iuran Operasional Sabedar</h3>
-                <p class="text-xs text-blue-700 mt-1">Mendukung operasional angkutan armada cator dan pengelolaan hangar pengolahan sampah desa.</p>
-            </div>
-        </div>
-
-        <div class="bg-emerald-600 text-white rounded-xl p-4 text-center shadow">
-            <p class="text-sm font-medium"><i class="fas fa-check-circle mr-2"></i> Portal Web Resmi Berhasil Dideploy & Aktif</p>
-        </div>
     </main>
 
-    <footer class="bg-gray-800 text-gray-400 text-center text-xs py-6 mt-12">
-        <p>&copy; 2026 TPS 3R Sapu Bersih Desa Dawuan Barat. All Rights Reserved.</p>
+    <!-- FOOTER -->
+    <footer class="bg-gray-900 text-gray-400 text-center text-xs py-8 mt-12 border-t border-gray-800">
+        <div class="container mx-auto px-4 space-y-2">
+            <p class="font-medium text-gray-300">KSM TPS 3R "Sapu Bersih" Desa Dawuan Barat</p>
+            <p class="text-gray-500">Kecamatan Cikampek, Kabupaten Karawang, Jawa Barat</p>
+            <p class="text-gray-600 text-[11px] pt-4">&copy; 2026 KSM TPS 3R Sapu Bersih. All Rights Reserved.</p>
+        </div>
     </footer>
+
 </body>
 </html>
